@@ -18,7 +18,7 @@
 
 const cargarFotos = async() => {
     try {
-        const respuesta = await fetch(`https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/textsearch/json?query=cities+argentina&key=AIzaSyDdiWYYlIp2G_dR5NVKcY_SN2d1-z3maE0`);
+        const respuesta = await fetch(`https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/textsearch/json?query=cities+argentina&key=${apiKey}`);
         console.log(respuesta);
         if (respuesta.status === 200) {
             const datos = await respuesta.json();
@@ -28,7 +28,7 @@ const cargarFotos = async() => {
             datos.results.forEach(foto => {
                 imagenes += `
                     <div class="lugar">
-                        <img class="poster" src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${foto.photos[0].photo_reference}&key=AIzaSyDdiWYYlIp2G_dR5NVKcY_SN2d1-z3maE0">
+                        <img class="poster" src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${foto.photos[0].photo_reference}&key=${apiKey}">
                         <h3 class="titulo">${foto.name}</h3>
                         <p>${foto.formatted_address}</p>
                     </div>

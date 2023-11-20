@@ -16,29 +16,42 @@
 //     }
 // });
 
-const cargarFotos = async() => {
-    try {
-        const respuesta = await fetch(`https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/textsearch/json?query=cities+argentina&key=${apiKey}`);
-        console.log(respuesta);
-        if (respuesta.status === 200) {
-            const datos = await respuesta.json();
-            console.log(datos.results);
-        // const detalle = await fetch(`https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json?placeid=ChIJvZaFMsjKvJURieIAHSNHtkM&key=AIzaSyDdiWYYlIp2G_dR5NVKcY_SN2d1-z3maE0`);
-            let imagenes = "";
-            datos.results.forEach(foto => {
-                imagenes += `
-                    <div class="lugar">
-                        <img class="poster" src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${foto.photos[0].photo_reference}&key=${apiKey}">
-                        <h3 class="titulo">${foto.name}</h3>
-                        <p>${foto.formatted_address}</p>
-                    </div>
-                `;
-            });
-            document.getElementById("contenedor").innerHTML = imagenes;
+function initMap() {
+    let imagenes = "";
+    const map = new google.maps.Map(document.getElementById("map"), {});
+    const service = new google.maps.places.PlacesService(map);
+    const requestSearch = {
+        query: 'ciudades en argentina'
+    };
+    service.textSearch(requestSearch, (results, status) => {
+        if (status === google.maps.places.PlacesServiceStatus.OK) {
+            console.log(results);
+
+            for (let i=0; i < results.length; i++) {
+                const requestDetails = {
+                    placeId: results[i].place_id,
+                    fields: ["name", "photos", "rating", "reviews", "url", "website"],
+                };
+                service.getDetails(requestDetails, (place, status) => {
+                    if (
+                    status === google.maps.places.PlacesServiceStatus.OK &&
+                    place
+                    ) {
+                    console.log(place);
+                    imagenes += `
+                        <div class="lugar">
+                            <img class="poster" src=${results[i].photos[0].getUrl()}>
+                            <h3 class="titulo">${results[i].name}</h3>
+                            <p>${results[i].formatted_address}</p>
+                            <a href="${place.url}">Mapa</a>
+                        </div>
+                    `;
+                    document.getElementById("contenedor").innerHTML = imagenes;
+                    }
+                });
+            }
         }
-    } catch (error) {
-        console.log(error.message);
-    }
+    });
 }
 
-cargarFotos();
+window.initMap = initMap;

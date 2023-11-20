@@ -68,3 +68,7 @@ body {
 .paginacion button:hover {
 	background: #137c32;
 }
+
+#map {
+	height: 100%;
+}

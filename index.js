@@ -34,8 +34,8 @@ function initMap() {
                 };
                 service.getDetails(requestDetails, (place, status) => {
                     if (
-                    status === google.maps.places.PlacesServiceStatus.OK &&
-                    place
+                        status === google.maps.places.PlacesServiceStatus.OK &&
+                        place
                     ) {
                     console.log(place);
                     imagenes += `
